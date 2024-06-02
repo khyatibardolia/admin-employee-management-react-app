@@ -21,8 +21,8 @@ export const AppRoutes = () => {
       }
     >
       <Routes>
-        <Route path="/" element={<LoginComponent />} />
-        <Route path="/home" element={<HomeComponent />} />
+        <Route path="/login" element={<LoginComponent />} />
+        <Route path="/" element={<HomeComponent />} />
         <Route path="/employees/:id" element={<EmployeeDetailsComponent />} />
         <Route path="/logout" element={<LogoutComponent />} />
         <Route path="*" element={<LoginComponent />} />
