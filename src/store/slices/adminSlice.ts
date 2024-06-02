@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AdminState {
   adminUsername: string | null;
@@ -16,8 +16,18 @@ const adminSlice = createSlice({
   name: 'admin',
   initialState,
   reducers: {
-    dummyReducer() {},
+    initializeAdmin(
+      state,
+      action: PayloadAction<{ username: string; password: string }>
+    ) {
+      state.adminUsername = action.payload.username;
+      state.adminPassword = action.payload.password;
+      localStorage.setItem('adminUsername', action.payload.username);
+      localStorage.setItem('adminPassword', action.payload.password);
+    },
   },
 });
+
+export const { initializeAdmin } = adminSlice.actions;
 
 export default adminSlice.reducer;
