@@ -25,9 +25,24 @@ const adminSlice = createSlice({
       localStorage.setItem('adminUsername', action.payload.username);
       localStorage.setItem('adminPassword', action.payload.password);
     },
+    login(
+      state,
+      action: PayloadAction<{ adminUsername: string; adminPassword: string }>
+    ) {
+      if (
+        action.payload.adminUsername ===
+          localStorage.getItem('adminUsername') &&
+        action.payload.adminPassword === localStorage.getItem('adminPassword')
+      ) {
+        state.loggedIn = true;
+        localStorage.setItem('loggedIn', 'true');
+      } else {
+        throw new Error('Invalid credentials');
+      }
+    },
   },
 });
 
-export const { initializeAdmin } = adminSlice.actions;
+export const { initializeAdmin, login } = adminSlice.actions;
 
 export default adminSlice.reducer;

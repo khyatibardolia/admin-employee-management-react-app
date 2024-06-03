@@ -3,6 +3,7 @@ import React, { Suspense, useEffect } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import { useAppDispatch } from 'hooks';
 import { initializeAdmin } from 'store/slices/adminSlice';
+import ProtectedRoute from 'components/ProtectedRoute/ProtectedRoute';
 
 const LoginComponent = React.lazy(() => import('pages/Login/Login'));
 const HomeComponent = React.lazy(() => import('pages/Home/Home'));
@@ -44,9 +45,11 @@ export const AppRoutes = () => {
     >
       <Routes>
         <Route path="/login" element={<LoginComponent />} />
-        <Route path="/" element={<HomeComponent />} />
-        <Route path="/employees/:id" element={<EmployeeDetailsComponent />} />
-        <Route path="/logout" element={<LogoutComponent />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<HomeComponent />} />
+          <Route path="/employees/:id" element={<EmployeeDetailsComponent />} />
+          <Route path="/logout" element={<LogoutComponent />} />
+        </Route>
         <Route path="*" element={<LoginComponent />} />
       </Routes>
     </Suspense>

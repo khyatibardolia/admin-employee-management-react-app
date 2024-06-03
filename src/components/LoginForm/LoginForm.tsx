@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, forwardRef, SyntheticEvent, useState } from 'react';
 import {
   Box,
   Button,
@@ -9,10 +9,15 @@ import {
   Typography,
   styled,
   useTheme,
+  Snackbar,
 } from '@mui/material';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import PersonIcon from '@mui/icons-material/Person';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useAppDispatch } from 'hooks';
+import { useNavigate } from 'react-router-dom';
+import { login } from 'store/slices/adminSlice';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -73,30 +78,69 @@ const StyledCardActions = styled(CardActions)(() => ({
   padding: 0,
 }));
 
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  password: Yup.string().required('Password is required'),
-});
+const Alert = forwardRef<HTMLDivElement, AlertProps>(
+  function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  }
+);
 
 export const LoginForm: FC = () => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
+    'success'
+  );
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      adminUsername: '',
+      adminPassword: '',
     },
-    validationSchema: validationSchema,
+    validationSchema: Yup.object({
+      adminUsername: Yup.string().required('Username is required'),
+      adminPassword: Yup.string().required('Password is required'),
+    }),
     onSubmit: (values) => {
-      // Handle form submission
-      console.log(values);
+      try {
+        dispatch(login(values));
+        setSnackbarMessage('Successfully logged in!');
+        setSnackbarSeverity('success');
+        setSnackbarOpen(true);
+        setTimeout(() => navigate('/'), 800);
+      } catch (error) {
+        setSnackbarMessage('Invalid login details!');
+        setSnackbarSeverity('error');
+        setSnackbarOpen(true);
+      }
     },
   });
 
+  const handleSnackbarClose = (event?: SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
   return (
     <StyledBox>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
       <StyledCard>
         <CardContent sx={{ padding: 0, width: '100%' }}>
           <IconContainer>
@@ -116,26 +160,35 @@ export const LoginForm: FC = () => {
           <FormContainer component="form" onSubmit={formik.handleSubmit}>
             <TextField
               fullWidth
-              label="Email Address"
-              name="email"
-              type="email"
-              value={formik.values.email}
+              id="adminUsername"
+              name="adminUsername"
+              label="Admin Username"
+              value={formik.values.adminUsername}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={formik.touched.email && formik.errors.email}
+              error={
+                formik.touched.adminUsername &&
+                Boolean(formik.errors.adminUsername)
+              }
+              helperText={
+                formik.touched.adminUsername && formik.errors.adminUsername
+              }
               sx={{ marginBottom: '40px' }}
             />
             <TextField
               fullWidth
-              label="Password"
-              name="password"
+              id="adminPassword"
+              name="adminPassword"
+              label="Admin Password"
               type="password"
-              value={formik.values.password}
+              value={formik.values.adminPassword}
               onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
+              error={
+                formik.touched.adminPassword &&
+                Boolean(formik.errors.adminPassword)
+              }
+              helperText={
+                formik.touched.adminPassword && formik.errors.adminPassword
+              }
               sx={{ marginBottom: '40px' }}
             />
             <StyledCardActions>
