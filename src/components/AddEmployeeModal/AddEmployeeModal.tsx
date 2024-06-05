@@ -1,10 +1,11 @@
 import { Box, Modal, styled, TextField, Button } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { addEmployee } from 'store/slices/employeeSlice';
+import { addEmployee, editEmployeeDetails } from 'store/slices/employeeSlice';
 import { useAppDispatch } from 'hooks';
 import { FC } from 'react';
 import { generateId } from 'utils/generateId';
+import { Employee } from 'store/slices/types';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   position: 'absolute' as const,
@@ -20,6 +21,8 @@ const StyledBox = styled(Box)(({ theme }) => ({
 type Props = {
   open: boolean;
   handleClose: () => void;
+  employee?: Employee;
+  isEditMode?: boolean;
 };
 
 const RelationshipType = {
@@ -28,14 +31,19 @@ const RelationshipType = {
   CONTRACTOR: 'CONTRACTOR',
 };
 
-export const AddEmployeeModal: FC<Props> = ({ open, handleClose }: Props) => {
+export const AddEmployeeModal: FC<Props> = ({
+  open,
+  handleClose,
+  employee,
+  isEditMode,
+}: Props) => {
   const dispatch = useAppDispatch();
 
   const initialValues = {
-    name: '',
-    age: '',
-    relationship: '',
-    typeOfWork: '',
+    name: employee?.name || '',
+    age: employee?.age || '',
+    relationship: employee?.relationship || '',
+    typeOfWork: employee?.typeOfWork || '',
   };
 
   const validationSchema = Yup.object().shape({
@@ -57,8 +65,13 @@ export const AddEmployeeModal: FC<Props> = ({ open, handleClose }: Props) => {
   });
 
   const onSubmit = (values, { resetForm }) => {
-    const newEmployee = { id: generateId(), ...values };
-    dispatch(addEmployee(newEmployee));
+    if (!isEditMode) {
+      const newEmployee = { id: generateId(), ...values };
+      dispatch(addEmployee(newEmployee));
+    } else {
+      const updatedEmployee = { id: employee.id, ...values };
+      dispatch(editEmployeeDetails(updatedEmployee));
+    }
     handleClose();
     resetForm();
   };

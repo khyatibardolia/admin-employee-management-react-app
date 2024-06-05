@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   employees: JSON.parse(localStorage.getItem('employees')) || [],
-  employee: {},
 };
 
 const employeeSlice = createSlice({
@@ -13,16 +12,20 @@ const employeeSlice = createSlice({
       state.employees.push(action.payload);
       localStorage.setItem('employees', JSON.stringify(state.employees));
     },
-    getEmployeeDetails(state, action) {
-      if (state.employees?.length) {
-        state.employee = state.employees.find(
-          (emp) => emp.id === action.payload
-        );
+    editEmployeeDetails(state, action) {
+      const { id, ...updatedEmployee } = action.payload;
+      const index = state.employees.findIndex((emp) => emp.id === id);
+      if (index !== -1) {
+        state.employees[index] = {
+          ...state.employees[index],
+          ...updatedEmployee,
+        };
+        localStorage.setItem('employees', JSON.stringify(state.employees));
       }
     },
   },
 });
 
-export const { addEmployee, getEmployeeDetails } = employeeSlice.actions;
+export const { addEmployee, editEmployeeDetails } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

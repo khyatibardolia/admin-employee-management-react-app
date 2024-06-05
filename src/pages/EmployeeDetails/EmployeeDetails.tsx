@@ -1,11 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import { Box, Button, Avatar, Typography, styled } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from 'hooks';
-import { getEmployeeDetails } from 'store/slices/employeeSlice';
+import { useAppSelector } from 'hooks';
 import { RootState } from 'store';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import PersonIcon from '@mui/icons-material/Person';
+import { AddEmployeeModal } from 'components/AddEmployeeModal/AddEmployeeModal';
+import { Employee } from 'store/slices/types';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(12),
@@ -26,24 +27,29 @@ const Value = styled(Typography)(({ theme }) => ({
 }));
 
 const EmployeeDetails: FC = () => {
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [employee, setEmployee] = useState<Employee>({
+    id: '',
+    age: 0,
+    name: '',
+    relationship: '',
+    typeOfWork: '',
+  });
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
-  const employee = useAppSelector(
-    (state: RootState) => state.employees.employee
-  );
-
-  const toggleEditMode = () => setIsEditMode((prev) => !prev);
-  const handleSave = () => {
-    toggleEditMode();
-  };
+  const { employees } = useAppSelector((state: RootState) => state.employees);
 
   useEffect(() => {
-    if (id) {
-      dispatch(getEmployeeDetails(id));
+    if (id && employees?.length) {
+      //get employee details
+      const singleEmployeeDetails = employees.find(
+        (employee: Employee) => employee.id === id
+      );
+      setEmployee(singleEmployeeDetails);
     }
-  }, [id, dispatch]);
+  }, [id, employees]);
 
   if (!employee) {
     return <Typography>Sorry, unable to fetch employee data.</Typography>;
@@ -101,16 +107,16 @@ const EmployeeDetails: FC = () => {
           </Box>
         </Box>
         <Box mt={2}>
-          {isEditMode ? (
-            <Button variant="contained" onClick={handleSave}>
-              Save
-            </Button>
-          ) : (
-            <Button variant="contained" onClick={toggleEditMode}>
-              Edit
-            </Button>
-          )}
+          <Button variant="contained" onClick={handleOpen}>
+            Edit
+          </Button>
         </Box>
+        <AddEmployeeModal
+          open={open}
+          handleClose={handleClose}
+          employee={employee}
+          isEditMode
+        />
       </Box>
     </Box>
   );
