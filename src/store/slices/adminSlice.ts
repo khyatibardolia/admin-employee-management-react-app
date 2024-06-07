@@ -40,9 +40,13 @@ const adminSlice = createSlice({
         throw new Error('Invalid credentials');
       }
     },
+    logout(state) {
+      state.loggedIn = false;
+      localStorage.removeItem('loggedIn');
+    },
   },
 });
 
-export const { initializeAdmin, login } = adminSlice.actions;
+export const { initializeAdmin, login, logout } = adminSlice.actions;
 
 export default adminSlice.reducer;

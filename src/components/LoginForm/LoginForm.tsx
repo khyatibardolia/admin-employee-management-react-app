@@ -1,4 +1,4 @@
-import { FC, forwardRef, SyntheticEvent, useState } from 'react';
+import { FC, forwardRef, SyntheticEvent, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useAppDispatch } from 'hooks';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { login } from 'store/slices/adminSlice';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -86,6 +86,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(
 
 export const LoginForm: FC = () => {
   const theme = useTheme();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -93,6 +94,15 @@ export const LoginForm: FC = () => {
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>(
     'success'
   );
+
+  useEffect(() => {
+    if (location.state?.fromLogout) {
+      setSnackbarMessage('Logout successful!');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state]);
 
   const formik = useFormik({
     initialValues: {

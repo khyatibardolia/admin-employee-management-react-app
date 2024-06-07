@@ -1,9 +1,29 @@
-import { AppBar, Box, CssBaseline, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  Button,
+  CssBaseline,
+  styled,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { FC } from 'react';
 import GroupIcon from '@mui/icons-material/Group';
-import Logout from 'pages/Logout/Logout';
+import { useNavigate } from 'react-router-dom';
+
+const WhiteOutlinedButton = styled(Button)(({ theme }) => ({
+  borderColor: theme.palette.common.white,
+  color: theme.palette.common.white,
+  marginLeft: 'auto',
+  '&:hover': {
+    borderColor: theme.palette.common.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+}));
 
 export const AppLayout: FC = ({ children }) => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
@@ -17,7 +37,12 @@ export const AppLayout: FC = ({ children }) => {
             <Typography variant="h6" noWrap component="div">
               Manage Employees
             </Typography>
-            <Logout />
+            <WhiteOutlinedButton
+              variant="outlined"
+              onClick={() => navigate('/logout')}
+            >
+              Log out
+            </WhiteOutlinedButton>
           </Toolbar>
         </AppBar>
       </Box>
