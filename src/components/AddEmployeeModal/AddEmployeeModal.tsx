@@ -1,4 +1,5 @@
-import { Box, Modal, styled, TextField, Button } from '@mui/material';
+import { Box, Modal, TextField, Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { addEmployee, editEmployeeDetails } from 'store/slices/employeeSlice';
@@ -8,7 +9,7 @@ import { generateId } from 'utils/generateId';
 import { Employee } from 'store/slices/types';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-  position: 'absolute' as const,
+  position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',

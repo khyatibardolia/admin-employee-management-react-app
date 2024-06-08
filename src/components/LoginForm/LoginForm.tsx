@@ -1,4 +1,11 @@
-import { FC, forwardRef, SyntheticEvent, useEffect, useState } from 'react';
+import {
+  FC,
+  FormEvent,
+  forwardRef,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Box,
   Button,
@@ -10,6 +17,7 @@ import {
   styled,
   useTheme,
   Snackbar,
+  SnackbarCloseReason,
 } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import PersonIcon from '@mui/icons-material/Person';
@@ -61,7 +69,7 @@ const IconContainer = styled(Box)(() => ({
   marginBottom: '40px',
 }));
 
-const FormContainer = styled(Box)(() => ({
+const FormContainer = styled('form')(() => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -128,7 +136,10 @@ export const LoginForm: FC = () => {
     },
   });
 
-  const handleSnackbarClose = (event?: SyntheticEvent, reason?: string) => {
+  const handleSnackbarClose = (
+    _event?: SyntheticEvent<any> | Event,
+    reason?: SnackbarCloseReason
+  ) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -140,7 +151,7 @@ export const LoginForm: FC = () => {
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={4000}
-        onClose={handleSnackbarClose}
+        onClose={(event, reason) => handleSnackbarClose(event, reason)}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert
@@ -167,7 +178,9 @@ export const LoginForm: FC = () => {
             </Typography>
           </IconContainer>
 
-          <FormContainer component="form" onSubmit={formik.handleSubmit}>
+          <FormContainer
+            onSubmit={(e: FormEvent<HTMLFormElement>) => formik.handleSubmit(e)}
+          >
             <TextField
               fullWidth
               id="adminUsername"
