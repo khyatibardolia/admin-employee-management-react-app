@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface AdminState {
+export interface AdminState {
   adminUsername: string | null;
   adminPassword: string | null;
   loggedIn: boolean;
