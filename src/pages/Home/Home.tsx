@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { Box, Button, Snackbar } from '@mui/material';
 import { EmployeeList } from 'components/EmployeeList/EmployeeList';
-import { AddEmployeeModal } from 'components/AddEmployeeModal/AddEmployeeModal';
+import { AddEditEmployeeModal } from 'components/AddEditEmployeeModal/AddEditEmployeeModal';
 import { useAppSelector } from 'hooks';
 
 const Home: FC = () => {
@@ -28,7 +28,7 @@ const Home: FC = () => {
         />
       )}
       <EmployeeList />
-      <AddEmployeeModal open={open} handleClose={handleClose} />
+      <AddEditEmployeeModal open={open} handleClose={handleClose} />
     </Box>
   );
 };

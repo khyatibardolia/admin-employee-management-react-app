@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { useAppSelector } from 'hooks';
+import { Employee } from 'store/slices/types';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -53,7 +54,7 @@ export const EmployeeList: FC = () => {
         </TableHead>
         <TableBody>
           {employees?.length ? (
-            employees.map((employee) => (
+            employees.map((employee: Employee) => (
               <TableRow key={employee.id}>
                 <StyledTableCell component="th" scope="row">
                   <Link href={`/employees/${employee.id}`}>

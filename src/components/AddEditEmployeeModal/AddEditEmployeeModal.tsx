@@ -1,23 +1,11 @@
-import { Box, Modal, TextField, Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Formik, Form } from 'formik';
+import { Box, Modal, TextField, Button, styled } from '@mui/material';
+import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { addEmployee, editEmployeeDetails } from 'store/slices/employeeSlice';
 import { useAppDispatch } from 'hooks';
 import { FC } from 'react';
 import { generateId } from 'utils/generateId';
 import { Employee } from 'store/slices/types';
-
-const StyledBox = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  backgroundColor: theme.palette.background.paper,
-  boxShadow: 24,
-  padding: theme.spacing(4),
-}));
 
 type Props = {
   open: boolean;
@@ -32,7 +20,18 @@ const RelationshipType = {
   CONTRACTOR: 'CONTRACTOR',
 };
 
-export const AddEmployeeModal: FC<Props> = ({
+const StyledBox = styled(Box)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  box-shadow: 24px;
+  padding: ${({ theme }) => theme.spacing(4)};
+`;
+
+export const AddEditEmployeeModal: FC<Props> = ({
   open,
   handleClose,
   employee,
@@ -41,11 +40,11 @@ export const AddEmployeeModal: FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const initialValues = {
-    name: employee?.name || '',
-    age: employee?.age || '',
-    relationship: employee?.relationship || '',
-    typeOfWork: employee?.typeOfWork || '',
-  };
+    name: employee?.name,
+    age: employee?.age,
+    relationship: employee?.relationship,
+    typeOfWork: employee?.typeOfWork,
+  } as Employee;
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -65,12 +64,15 @@ export const AddEmployeeModal: FC<Props> = ({
       .required('Type of work is required'),
   });
 
-  const onSubmit = (values, { resetForm }) => {
+  const onSubmit = (
+    values: Employee,
+    { resetForm }: FormikHelpers<Employee>
+  ) => {
     if (!isEditMode) {
       const newEmployee = { id: generateId(), ...values };
       dispatch(addEmployee(newEmployee));
     } else {
-      const updatedEmployee = { id: employee.id, ...values };
+      const updatedEmployee = { id: employee?.id, ...values };
       dispatch(editEmployeeDetails(updatedEmployee));
     }
     handleClose();

@@ -7,7 +7,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 import GroupIcon from '@mui/icons-material/Group';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,11 @@ const WhiteOutlinedButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const AppLayout: FC = ({ children }) => {
+interface AppLayoutProps {
+  children: ReactNode;
+}
+
+export const AppLayout: FC<AppLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
 
   return (

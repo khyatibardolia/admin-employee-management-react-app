@@ -1,7 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Employee } from 'store/slices/types';
 
-const initialState = {
-  employees: JSON.parse(localStorage.getItem('employees')) || [],
+export interface EmployeeState {
+  employees: Employee[];
+}
+
+const storedEmployees = localStorage.getItem('employees');
+
+const initialState: EmployeeState = {
+  employees: storedEmployees ? JSON.parse(storedEmployees) : [],
 };
 
 const employeeSlice = createSlice({

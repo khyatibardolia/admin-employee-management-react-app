@@ -14,7 +14,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "types": ["jest", "jest-dom", "@testing-library/jest-dom", "@testing-library/react"],
+    "types": ["jest", "@testing-library/jest-dom", "@testing-library/react"],
 
     /* Linting */
     "strict": true,
