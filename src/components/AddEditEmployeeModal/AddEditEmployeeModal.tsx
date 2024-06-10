@@ -6,6 +6,7 @@ import { useAppDispatch } from 'hooks';
 import { FC } from 'react';
 import { generateId } from 'utils/generateId';
 import { Employee } from 'store/slices/types';
+import SaveIcon from '@mui/icons-material/Save';
 
 type Props = {
   open: boolean;
@@ -164,6 +165,7 @@ export const AddEditEmployeeModal: FC<Props> = ({
                 color="primary"
                 fullWidth
                 sx={{ marginTop: '24px', padding: '10px' }}
+                startIcon={<SaveIcon />}
               >
                 Save
               </Button>

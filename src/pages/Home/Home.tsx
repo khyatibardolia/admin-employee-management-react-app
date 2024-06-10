@@ -3,6 +3,7 @@ import { Box, Button, Snackbar } from '@mui/material';
 import { EmployeeList } from 'components/EmployeeList/EmployeeList';
 import { AddEditEmployeeModal } from 'components/AddEditEmployeeModal/AddEditEmployeeModal';
 import { useAppSelector } from 'hooks';
+import AddIcon from '@mui/icons-material/Add';
 
 const Home: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -17,6 +18,7 @@ const Home: FC = () => {
         color="primary"
         sx={{ marginLeft: 'auto' }}
         onClick={handleOpen}
+        startIcon={<AddIcon />}
       >
         Add Employee
       </Button>

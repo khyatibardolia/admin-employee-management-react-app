@@ -3,6 +3,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { Avatar, Box, Button, styled, Typography } from '@mui/material';
 import { AddEditEmployeeModal } from 'components/AddEditEmployeeModal/AddEditEmployeeModal';
 import { Employee } from 'store/slices/types';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(12),
@@ -62,7 +63,11 @@ export const EmployeeInfo: FC<Props> = ({ employee }) => {
         </Box>
       </Box>
       <Box mt={2}>
-        <Button variant="contained" onClick={handleOpen}>
+        <Button
+          variant="contained"
+          onClick={handleOpen}
+          startIcon={<ModeEditIcon />}
+        >
           Edit
         </Button>
       </Box>

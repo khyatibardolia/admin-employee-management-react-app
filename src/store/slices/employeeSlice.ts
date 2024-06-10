@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Employee } from 'store/slices/types';
+import { getLocalStorageItem, setLocalStorageItem } from 'utils/localStorage';
 
 export interface EmployeeState {
   employees: Employee[];
 }
 
-const storedEmployees = localStorage.getItem('employees');
+const storedEmployees = getLocalStorageItem('employees');
 
 const initialState: EmployeeState = {
   employees: storedEmployees ? JSON.parse(storedEmployees) : [],
@@ -17,7 +18,7 @@ const employeeSlice = createSlice({
   reducers: {
     addEmployee(state, action) {
       state.employees.push(action.payload);
-      localStorage.setItem('employees', JSON.stringify(state.employees));
+      setLocalStorageItem('employees', JSON.stringify(state.employees));
     },
     editEmployeeDetails(state, action) {
       const { id, ...updatedEmployee } = action.payload;
@@ -27,7 +28,7 @@ const employeeSlice = createSlice({
           ...state.employees[index],
           ...updatedEmployee,
         };
-        localStorage.setItem('employees', JSON.stringify(state.employees));
+        setLocalStorageItem('employees', JSON.stringify(state.employees));
       }
     },
   },
